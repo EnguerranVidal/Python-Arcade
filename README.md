@@ -19,7 +19,13 @@ This check and mate mechanic will be the main focus of the future additions to t
 ### Future additions:
 
 - **Check and Mate mechanics** : Adding the inability of moving while having your king threatened, the possibility of a "pat" (player not beingable tomove while not being threatened) or "mat" (same as pat but the king is threatened).
+
 - **Basic scoring system** : Adding a basic scoring system for the future addition of a basic tree-based AI and a "best move" and "mistakes" post-analysis.
+
 - **Record past moves for replay ability** : Add a box in the GUI reording past moves as well as making the last move visible on the board.
+
 - **Basic UI components** : Label indicating hose turn it is, Abandoning or Nulle proposal buttons
+
 - **Saves System** : Creating a saves system to continue an interesting game at a later date
+
+- **Custom Board Creation** : Adding the ability of creating custom boards for puzzles and challenges.
