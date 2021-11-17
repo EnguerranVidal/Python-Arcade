@@ -2,7 +2,7 @@
  This repository will gather a few Python games coded in Pygame, this will first contain a rudimentary Chess game and will increase in diversity overtime.
 
 
-## Chess
+## CHESS
 [![wakatime](https://wakatime.com/badge/user/d1fb42e6-38e1-489b-a7b0-fa05747ea94a/project/b22950de-2dcd-4cbf-8e57-2cf629725789.svg)](https://wakatime.com/badge/user/d1fb42e6-38e1-489b-a7b0-fa05747ea94a/project/b22950de-2dcd-4cbf-8e57-2cf629725789)
 
 This project came from the proposition from a C++ professor to create anentire chess interface on which the player could play against a friend on the same screen as well as play against a computerplayer (basic AI). As for the game current state, apart from the basic moving imperatives for each piece, board displaying and basic game management, the chess, check mate and pat state are not yet applied. Iwas able to add the "pion en passant" but not the "castle".
