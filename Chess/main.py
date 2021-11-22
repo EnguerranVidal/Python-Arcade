@@ -49,20 +49,21 @@ class ChessGame:
 
         self.clock = None
         self.turn = True
-        self.white_pieces = pygame.sprite.RenderClear()
-        self.black_pieces = pygame.sprite.RenderClear()
+        self.castle = False
+
         # Selection
         self.selected = False
         self.selected_piece = None
         self.selected_position = None
-        selected_path = os.path.join(self.board_path, "green_selected.png")
-        move_path = os.path.join(self.board_path, "green_move.png")
-        self.selected_image = pygame.transform.scale(pygame.image.load(selected_path), (65, 65))
+        selected_path = os.path.join(self.board_path, "move_tile.png")
+        move_path = os.path.join(self.board_path, "move_tile.png")
         self.move_image = pygame.transform.scale(pygame.image.load(move_path), (65, 65))
-
+        # Check image
+        check_path = os.path.join(self.board_path, "check_tile.png")
+        self.check_image = pygame.transform.scale(pygame.image.load(check_path), (65, 65))
         # Available Moves
         self.available_moves = []
-        available_path = os.path.join(self.board_path, "green_selected.png")
+        available_path = os.path.join(self.board_path, "move_tile.png")
         self.available_image = pygame.transform.scale(pygame.image.load(selected_path), (65, 65))
         # Player Times
         self.whites_time = 0.
@@ -110,20 +111,34 @@ class ChessGame:
 
     def new_game(self):
         self.board.reinitialize()
+        self.clear_promotion()
         self.selected = False
         self.turn = True
         self.display_board()
+        self.board.situation_check(True)
 
     def select_piece(self, pos):
         self.selected = True
         self.selected_piece = self.board.board[pos[0]][pos[1]]
         self.selected_position = pos
         # Finding available moves positions
-        self.available_moves = []
-        for i in range(8):
-            for j in range(8):
-                if self.selected_piece.is_valid_move(self.board.board, pos, (i, j)):
-                    self.available_moves.append((i, j))
+        self.available_moves = self.board.available_moves(self.turn, pos)
+        # Adding castle if king is selected
+        if self.selected_piece.name == "K" and not self.selected_piece.moved:
+            if self.turn:
+                if self.board.can_king_castle(self.turn):
+                    self.available_moves.append((7, 6))
+                    self.castle = True
+                if self.board.can_queen_castle(self.turn):
+                    self.available_moves.append((7, 2))
+                    self.castle = True
+            else:
+                if self.board.can_king_castle(self.turn):
+                    self.available_moves.append((0, 6))
+                    self.castle = True
+                if self.board.can_queen_castle(self.turn):
+                    self.available_moves.append((0, 2))
+                    self.castle = True
         self.display_board()
 
     def unselect_piece(self):
@@ -134,32 +149,51 @@ class ChessGame:
         self.display_board()
 
     def move(self, start, finish):
-        piece = self.board.board[start[0]][start[1]]
-        taken = self.board.board[finish[0]][finish[1]]
-        # Adding possible ghost pawns
-        if piece.name == "P":
-            if piece.color:
-                if start[0] == 6 and finish[0] == 4:
-                    self.board.board[5][start[1]] = pieces.Ghost_Pawn(True)
-            else:
-                if start[0] == 1 and finish[0] == 3:
-                    self.board.board[2][start[1]] = pieces.Ghost_Pawn(False)
-            if taken is not None and taken.name == "GP":
-                if taken.color:
-                    self.board.board[4][finish[1]] = None
-                else:
-                    self.board.board[3][finish[1]] = None
-        # Moving piece across board
-        self.board.board[finish[0]][finish[1]] = piece
-        self.board.board[start[0]][start[1]] = None
+        if self.turn and start == (7, 4):  # WHITE KING
+            if self.selected_piece.name == "K" and self.castle:
+                if finish == (7, 6):
+                    self.board.move_piece([7, 7], [7, 5])
+                if finish == (7, 2):
+                    self.board.move_piece([7, 0], [7, 3])
+        if not self.turn and start == (0, 4):  # BLACK KING
+            if self.selected_piece.name == "K" and self.castle:
+                if finish == (0, 6):
+                    self.board.move_piece([0, 7], [0, 5])
+                if finish == (0, 2):
+                    self.board.move_piece([0, 0], [0, 3])
+        self.board.move_piece(start, finish)
+        self.unselect_piece()
+        self.display_board()
+        self.castle = False
+        if self.board.check_promotion(self.turn):
+            self.display_promotion()
+            promotion = True
+            while promotion:
+                time_delta = self.clock.tick(60) / 1000.0
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        continuing = False
+                    if event.type == pygame.MOUSEBUTTONUP:  # Clicking
+                        pos = pygame.mouse.get_pos()
+                        if 580 < pos[0] < 645 and 160 < pos[1] < 420:
+                            piece = (pos[1] - 160) // 65
+                            self.board.promote(self.turn, piece)
+                            promotion = False
+                            self.clear_promotion()
+                    if event.type == pygame.USEREVENT:
+                        if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                            if event.ui_element == self.new_button:
+                                self.new_game()
+                    self.manager.process_events(event)
+                self.manager.draw_ui(self.window_surface)
+                self.manager.update(time_delta)
+                pygame.display.flip()
         # Changing Turn
         self.turn = not self.turn
-        self.unselect_piece()
         self.board.clean_ghost_pawn(self.turn)
+        self.display_board()
 
     def display_board(self):
-        self.white_pieces.clear(self.window_surface, self.empty_surface)
-        self.black_pieces.clear(self.window_surface, self.empty_surface)
         self.window_surface.blit(self.board_image, (30, 30))
         if self.selected:
             pos_x = 30 + self.selected_position[1] * 65
@@ -169,6 +203,11 @@ class ChessGame:
                 pos_x = 30 + i[1] * 65
                 pos_y = 30 + i[0] * 65
                 self.window_surface.blit(self.move_image, (pos_x, pos_y))
+        if self.board.situation_check(self.turn):
+            king = self.board.find_king(self.turn)
+            pos_x = 30 + king[1] * 65
+            pos_y = 30 + king[0] * 65
+            self.window_surface.blit(self.check_image, (pos_x, pos_y))
         for i in range(8):
             for j in range(8):
                 piece = self.board.board[i][j]
@@ -186,8 +225,31 @@ class ChessGame:
                         pos_x = 30 + j * 65
                         pos_y = 30 + i * 65
                         self.window_surface.blit(piece_image, (pos_x, pos_y))
-        self.white_pieces.draw(self.window_surface)
-        self.black_pieces.draw(self.window_surface)
+
+    def display_promotion(self):
+        promotion_pieces = ["queen", "rook", "bishop", "knight"]
+        path = os.path.join(self.board_path, "white_tile.png")
+        tile = pygame.transform.scale(pygame.image.load(path), (65, 65))
+        for i in range(4):
+            pos_x = 580
+            pos_y = 160 + i * 65
+            self.window_surface.blit(tile, (pos_x, pos_y))
+            if self.turn:
+                path = os.path.join(self.pieces_path, "white_" + promotion_pieces[i] + ".png")
+                piece_image = pygame.transform.scale(pygame.image.load(path), (65, 65))
+            else:
+                path = os.path.join(self.pieces_path, "black_" + promotion_pieces[i] + ".png")
+                piece_image = pygame.transform.scale(pygame.image.load(path), (65, 65))
+            self.window_surface.blit(piece_image, (pos_x, pos_y))
+
+    def clear_promotion(self):
+        path = os.path.join(self.board_path, "cover_up.png")
+        cover = pygame.transform.scale(pygame.image.load(path), (65, 65))
+        for i in range(4):
+            pos_x = 580
+            pos_y = 160 + i * 65
+            self.window_surface.blit(cover, (pos_x, pos_y))
+
 
 
 if __name__ == '__main__':
