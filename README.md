@@ -5,9 +5,9 @@
 ## CHESS
 [![wakatime](https://wakatime.com/badge/user/d1fb42e6-38e1-489b-a7b0-fa05747ea94a/project/b22950de-2dcd-4cbf-8e57-2cf629725789.svg)](https://wakatime.com/badge/user/d1fb42e6-38e1-489b-a7b0-fa05747ea94a/project/b22950de-2dcd-4cbf-8e57-2cf629725789)
 
-This project came from the proposition from a C++ professor to create an entire chess interface on which the player could play against a friend on the same screen as well as play against a computer player (basic AI). As for the game current state, apart from the basic moves for each piece, board displaying and basic game management, the chess, check mate and pat state are not yet applied. Iwas able to add the "pion en passant" but not the "castle".
+This project came from the proposition from a C++ professor to create an entire chess interface on which the player could play against a friend on the same screen as well as play against a computer player (basic AI). As for the game current state, apart from the basic moves for each piece, board displaying and basic game management, the check mate and pat state are not yet applied. I was able to add the "pion en passant", the "castle" and "nailing" of pieces.
 
-This check and mate mechanic will be the main focus of the future additions to this program, making the game finishable ( it could theoretically continue forever as of now!)
+This check-mate mechanic will be the main focus of the future addition to this program, finally making the game finishable.
 
 ### The basic board :
 ![image](https://user-images.githubusercontent.com/80796115/142261275-e86ab50a-b506-4a3a-9aac-1c8b953e7f44.png)
@@ -18,7 +18,7 @@ This check and mate mechanic will be the main focus of the future additions to t
 
 ### Future additions:
 
-- **Check and Mate mechanics** : Adding the inability of moving while having your king threatened, the possibility of a "pat" (player not beingable tomove while not being threatened) or "mat" (same as pat but the king is threatened).
+- **Check and Mate mechanics** : the possibility of a "pat" (player not beingable tomove while not being threatened) or "mat" (same as pat but the king is threatened).
 
 - **Basic scoring system** : Adding a basic scoring system for the future addition of a basic tree-based AI and a "best move" and "mistakes" post-analysis.
 
