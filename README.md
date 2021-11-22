@@ -20,7 +20,7 @@ This check-mate mechanic will be the main focus of the future addition to this p
 
 - **Check and Mate mechanics** : the possibility of a "pat" (player not beingable tomove while not being threatened) or "mat" (same as pat but the king is threatened).
 
-- **Basic scoring system** : Adding a basic scoring system for the future addition of a basic tree-based AI and a "best move" and "mistakes" post-analysis.
+- **Basic Tree based AI** : Adding a basic tree-based AI and a "best move" and "mistakes" post-analysis.
 
 - **Record past moves for replay ability** : Add a box in the GUI reording past moves as well as making the last move visible on the board.
 
