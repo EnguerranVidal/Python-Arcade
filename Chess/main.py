@@ -192,7 +192,7 @@ class ChessGame:
         self.turn = not self.turn
         self.board.clean_ghost_pawn(self.turn)
         self.display_board()
-        print(self.board.score())
+        print(self.board.evaluate())
 
     def display_board(self):
         self.window_surface.blit(self.board_image, (30, 30))

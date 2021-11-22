@@ -419,7 +419,7 @@ class Board:
                             white = white + 3
                         if piece.name == "K":
                             white = white + 3
-                        if piece.name == "R":
+                        if piece.name == "P":
                             white = white + 1
                     if piece.name != "K" and not piece.color:
                         if piece.name == "Q":
@@ -430,6 +430,6 @@ class Board:
                             black = black + 3
                         if piece.name == "K":
                             black = black + 3
-                        if piece.name == "R":
+                        if piece.name == "P":
                             black = black + 1
         return white - black
