@@ -402,3 +402,34 @@ class Board:
                             self.board[7][i] = pieces.Bishop(False)
                         if number == 3:
                             self.board[7][i] = pieces.Knight(False)
+
+    def evaluate(self):
+        white = 0
+        black = 0
+        for i in range(8):
+            for j in range(8):
+                piece = self.board[i][j]
+                if piece is not None and piece.name != "GP":
+                    if piece.name != "K" and piece.color:
+                        if piece.name == "Q":
+                            white = white + 9
+                        if piece.name == "R":
+                            white = white + 5
+                        if piece.name == "B":
+                            white = white + 3
+                        if piece.name == "K":
+                            white = white + 3
+                        if piece.name == "R":
+                            white = white + 1
+                    if piece.name != "K" and not piece.color:
+                        if piece.name == "Q":
+                            black = black + 9
+                        if piece.name == "R":
+                            black = black + 5
+                        if piece.name == "B":
+                            black = black + 3
+                        if piece.name == "K":
+                            black = black + 3
+                        if piece.name == "R":
+                            black = black + 1
+        return white - black
