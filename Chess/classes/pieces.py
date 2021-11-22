@@ -5,6 +5,7 @@ class Piece:
     def __init__(self, color=True):
         self.color = color
         self.name = ""
+        self.moved = False
 
     def is_king(self):
         return False
