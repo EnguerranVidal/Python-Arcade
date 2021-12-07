@@ -1,4 +1,5 @@
 # Python-Arcade
+  [![HitCount](http://hits.dwyl.com/EnguerranVidal/Python-Arcade.svg?style=flat-square)](http://hits.dwyl.com/EnguerranVidal/Python-Arcade)
  This repository will gather a few Python games coded in Pygame, this will first contain a rudimentary Chess game and will increase in diversity overtime.
 
 
